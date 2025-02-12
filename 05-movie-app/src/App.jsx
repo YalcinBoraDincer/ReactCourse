@@ -66,23 +66,41 @@ const getAvarage = (array) =>
 //console.log(getAvarage(selected_movie_list.map((m) => m.rating)));
 
 export default function App() {
+  const [movies, setMovies] = useState(movie_list);
+  const [selected_movies, setSelected_Movies] = useState(selected_movie_list);
   return (
     <>
-      <Nav />
-      <Main />
+      <Nav>
+        <Logo />
+        <Search />
+        <NavSearhResult movies={movies} />
+      </Nav>
+      <Main>
+        <div className="row">
+          <div className="col-md-9">
+            <ListContainer>
+              <MovieList movies={movies} />
+            </ListContainer>
+          </div>
+          <div className="col-md-3">
+            <ListContainer>
+              <>
+                <MyListSummary selected_movies={selected_movie_list} />
+                <MyMovieList selected_movies={selected_movie_list} />
+              </>
+            </ListContainer>
+          </div>
+        </div>
+      </Main>
     </>
   );
 }
 
-function Nav() {
+function Nav({ children }) {
   return (
     <nav className="bg-primary text-white p-2">
       <div className="container">
-        <div className="row align-items-center">
-          <Logo />
-          <Search />
-          <NavSearhResult />
-        </div>
+        <div className="row align-items-center">{children}</div>
       </div>
     </nav>
   );
@@ -102,74 +120,62 @@ function Search() {
     </div>
   );
 }
-function NavSearhResult() {
+function NavSearhResult({ movies }) {
   return (
     <div className="col-4 text-end">
-      <strong>5</strong> kayit bulundu
+      <strong>{movies.length}</strong> kayit bulundu
     </div>
   );
 }
-function Main() {
-  return (
-    <main className="container">
-      <div className="row">
-        <div className="col-md-9">
-          <MovieListContainer />
-        </div>
-        <div className="col-md-3">
-          <MyMovieListContainer />
-        </div>
-      </div>
-    </main>
-  );
+function Main({ children }) {
+  return <main className="container">{children}</main>;
 }
-function MovieListContainer() {
-  const [isOpen1, setIsOpen1] = useState(true);
+function ListContainer({ children }) {
+  const [isOpen, setIsOpen] = useState(true);
   return (
     <div className="movie-list">
       <button
         className="btn btn-sm btn-outline-primary mb-2"
-        onClick={() => setIsOpen1((val) => !val)}
+        onClick={() => setIsOpen((val) => !val)}
       >
-        {isOpen1 ? (
+        {isOpen ? (
           <i className="bi bi-chevron-up"></i>
         ) : (
           <i className="bi bi-chevron-down"></i>
         )}
       </button>
-      {isOpen1 && <MovieList />}
+      {isOpen && children}
     </div>
   );
 }
 
-function MyMovieListContainer() {
-  const [selected_movies, setSelected_Movies] = useState(selected_movie_list);
-  const [isOpen2, setIsOpen2] = useState(true);
+// function MyMovieListContainer() {
+//   const [selected_movies, setSelected_Movies] = useState(selected_movie_list);
+//   const [isOpen2, setIsOpen2] = useState(true);
 
-  return (
-    <div className="movie-list">
-      <button
-        className="btn btn-sm btn-outline-primary mb-2"
-        onClick={() => setIsOpen2((val) => !val)}
-      >
-        {isOpen2 ? (
-          <i className="bi bi-chevron-up"></i>
-        ) : (
-          <i className="bi bi-chevron-down"></i>
-        )}
-      </button>
+//   return (
+//     <div className="movie-list">
+//       <button
+//         className="btn btn-sm btn-outline-primary mb-2"
+//         onClick={() => setIsOpen2((val) => !val)}
+//       >
+//         {isOpen2 ? (
+//           <i className="bi bi-chevron-up"></i>
+//         ) : (
+//           <i className="bi bi-chevron-down"></i>
+//         )}
+//       </button>
 
-      {isOpen2 && (
-        <>
-          <MyListSummary selected_movies={selected_movie_list} />
-          <MyMovieList selected_movies={selected_movie_list} />
-        </>
-      )}
-    </div>
-  );
-}
-function MovieList({ selected_movies }) {
-  const [movies, setMovies] = useState(movie_list);
+//       {isOpen2 && (
+//         <>
+//           <MyListSummary selected_movies={selected_movie_list} />
+//           <MyMovieList selected_movies={selected_movie_list} />
+//         </>
+//       )}
+//     </div>
+//   );
+// }
+function MovieList({ movies }) {
   return (
     <div className="row row-cols-1 row-cols-md-3 row-cols-xl-4 g-4 ">
       {movies.map((movie) => (
